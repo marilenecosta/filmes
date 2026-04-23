@@ -1,0 +1,42 @@
+{"properties": [
+  {
+    "name": "spring.datasource.platform",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.platform'"
+  },
+  {
+    "name": "spring.datasource.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.url'"
+  },
+  {
+    "name": "spring.jpa.hibernate.ddl-auto",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.jpa.hibernate.ddl-auto'"
+  },
+  {
+    "name": "spring.datasource.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.username'"
+  },
+  {
+    "name": "spring.datasource.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.password'"
+  },
+  {
+    "name": "spring.datasource.driverClassName",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.driverClassName'"
+  },
+  {
+    "name": "spring.sql.init.mode",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.sql.init.mode'"
+  },
+  {
+    "name": "spring.sql.init.schema-locations",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.sql.init.schema-locations'"
+  }
+]}

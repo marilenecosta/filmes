@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CineFlow | Gestão de Filmes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --azul-escuro: #001f3f;
+            --laranja: #ff851b;
+            --cinza-fundo: #f4f7f6;
+        }
+
+        body { background-color: var(--cinza-fundo); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        /* Cabeçalho Estilizado */
+        .header-sistema { 
+            background-color: var(--azul-escuro); 
+            color: white; 
+            padding: 20px 0; 
+            border-bottom: 6px solid var(--laranja);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .titulo-laranja {
+            color: var(--laranja) !important;
+            font-weight: bold !important;
+            text-align: center !important;
+            font-size: 1.8rem !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: block;
+            width: 100%;
+        }
+
+        /* Cards e Layout */
+        .card { border: none; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        /* Ajuste no card-header para aceitar o título laranja */
+        .card-header { 
+            background-color: transparent; 
+            border-bottom: none; 
+            padding-top: 20px;
+        }
+
+        /* Botões */
+        .btn-principal { background-color: var(--laranja); color: white; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-principal:hover { background-color: #e67300; transform: translateY(-2px); color: white; }
+
+        /* Tabela */
+        .table thead { background-color: var(--azul-escuro); color: white; }
+        .badge-genero { background-color: #e3f2fd; color: #0d47a1; padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div class="header-sistema mb-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="m-0">🎬 GESTÃO DE FILMES</h2>
+            </div>
+            <a th:href="@{/}" class="btn btn-outline-light btn-sm">Voltar ao Menu</a>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="card mb-5 p-3">
+            <div class="card-header">
+                <span class="titulo-laranja">Adicionar Novo Filme</span>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/filme/salvar}" method="post" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Título</label>
+                        <input type="text" name="titulo" class="form-control" placeholder="Ex: O Poderoso Chefão" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold">Ano</label>
+                        <input type="number" name="ano" class="form-control" placeholder="2024">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Diretor</label>
+                        <input type="text" name="diretor" class="form-control" placeholder="Nome do Diretor">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Gênero</label>
+                        <select name="generoId" class="form-select" required>
+                            <option value="">Selecione...</option>
+                            <option th:each="g : ${generos}" th:value="${g.id}" th:text="${g.nome}"></option>
+                        </select>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-principal px-5">SALVAR FILME</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h2 class="titulo-laranja">Catálogo de Filmes</h2>
+            
+            <div class="card shadow-sm p-3">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">ID</th>
+                            <th>Título</th>
+                            <th>Ano / Diretor</th>
+                            <th>Gênero</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="f : ${filmes}">
+                            <td class="text-muted" style="font-size: 0.75rem;" th:text="${#strings.substring(f.id,0,8)} + '...'"></td>
+                            <td><strong th:text="${f.titulo}"></strong></td>
+                            <td>
+                                <span th:text="${f.ano}"></span><br>
+                                <small class="text-muted" th:text="${f.diretor}"></small>
+                            </td>
+                            <td><span class="badge-genero" th:text="${f.genero}"></span></td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <a th:href="@{'/filme/editar/' + ${f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            th:data-bs-target="'#modal' + ${f.id}">
+                                        Excluir
+                                    </button>
+                                </div>
+
+                                <div class="modal fade" th:id="'modal' + ${f.id}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content" style="border-top: 6px solid var(--laranja);">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title fw-bold">Confirmar Exclusão</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <p>Deseja mesmo excluir este registro?</p>
+                                                <h4 class="fw-bold" style="color: var(--laranja);" th:text="${f.titulo}"></h4>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <a th:href="@{'/filme/excluir/' + ${f.id}}" class="btn btn-danger px-4">Excluir Agora</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<h2>Cadastrar Filme</h2>
+
+<form th:action="@{/filme}" th:object="${filme}" method="post">
+
+    <input type="text" th:field="*{titulo}" placeholder="Título" required><br>
+    <input type="text" th:field="*{diretor}" placeholder="Diretor"><br>
+    <input type="number" th:field="*{ano}" placeholder="Ano"><br>
+
+    <select th:field="*{generoId}">
+        <option value="">Selecione</option>
+        <option th:each="g : ${generos}"
+                th:value="${g.id}"
+                th:text="${g.nome}">
+        </option>
+    </select><br><br>
+
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="/filmes">Ver lista</a>
+
+</body>
+</html>

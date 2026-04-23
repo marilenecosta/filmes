@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-d7l4825f420s73d3l440-a.oregon-postgres.render.com
+    username: filmes_eh9d_user
+    password: XVfLAAUjcZ00q5UzMnWGdwzlS8qtXaiw
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  sql:
+    init:
+      mode: never
