@@ -7,10 +7,12 @@
 <form th:action="@{/filme}" th:object="${filme}" method="post">
 
     <input type="text" th:field="*{titulo}" placeholder="Título" required><br>
-    <input type="text" th:field="*{diretor}" placeholder="Diretor"><br>
-    <input type="number" th:field="*{ano}" placeholder="Ano"><br>
 
-    <select th:field="*{generoId}">
+    <input type="text" th:field="*{diretor}" placeholder="Diretor" required><br>
+
+    <input type="number" th:field="*{ano}" placeholder="Ano" required min="1900" max="2100"><br>
+
+    <select th:field="*{generoId}" required>
         <option value="">Selecione</option>
         <option th:each="g : ${generos}"
                 th:value="${g.id}"

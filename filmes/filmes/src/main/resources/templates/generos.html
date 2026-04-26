@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CineFlow | Gestão de Gêneros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --azul-escuro: #001f3f;
+            --laranja: #ff851b;
+            --cinza-fundo: #f4f7f6;
+        }
+
+        body { 
+            background-color: var(--cinza-fundo); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+
+        .header-sistema { 
+            background-color: var(--azul-escuro); 
+            color: white; 
+            padding: 20px 0; 
+            border-bottom: 6px solid var(--laranja);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .titulo-laranja {
+            color: var(--laranja) !important;
+            font-weight: bold !important;
+            text-align: center !important;
+            font-size: 1.8rem !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card { border: none; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        .btn-principal { 
+            background-color: var(--laranja); 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            transition: 0.3s; 
+        }
+        .btn-principal:hover { 
+            background-color: #e67300; 
+            transform: translateY(-2px); 
+            color: white; 
+        }
+
+        .table thead { background-color: var(--azul-escuro); color: white; }
+        
+        .nome-destaque {
+            color: var(--laranja);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-group .btn {
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-sistema mb-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h2 class="m-0">🎭 GESTÃO DE GÊNEROS</h2>
+            <a th:href="@{/}" class="btn btn-outline-light btn-sm">Voltar ao Menu</a>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Sucesso!</strong> Operação realizada no banco de dados.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${param.excluido}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Removido!</strong> O gênero foi excluído com sucesso.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="card mb-5 p-4">
+            <span class="titulo-laranja"
+                  th:text="${generoObj?.id == null ? 'Adicionar Novo Gênero' : 'Adicionar Novo Gênero'}">
+                Adicionar Novo Gênero
+            </span>
+
+            <form th:action="@{/genero/salvar}" method="post" class="row g-3">
+                
+                <input type="hidden" name="id" th:value="${generoObj.id}">
+
+                <div class="col-md-9">
+                    <label class="form-label fw-bold">Nome do Gênero</label>
+                    <input type="text" name="nome" class="form-control" 
+                           th:value="${generoObj.nome}" 
+                           placeholder="Ex: Suspense, Terror" required>
+                </div>
+
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-principal w-100 py-2" 
+                            th:text="${generoObj.id == null ? 'CADASTRAR' : 'SALVAR ALTERAÇÃO'}">
+                        CADASTRAR
+                    </button>
+                </div>
+            </form>
+
+            <div th:if="${generoObj.id != null}" class="mt-2 text-end">
+                <a th:href="@{/generos}" class="text-muted small">Cancelar Edição</a>
+            </div>
+        </div>
+
+        <div class="card p-3 shadow-sm">
+            <span class="titulo-laranja">Gêneros Cadastrados</span>
+
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 100px;">ID</th>
+                        <th>Nome do Gênero</th>
+                        <th class="text-center" style="width: 200px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="g : ${generos}">
+                        <td class="text-muted" th:text="${g.id}"></td>
+                        <td><strong th:text="${g.nome}"></strong></td>
+                        <td class="text-center">
+                            
+                            <div class="btn-group shadow-sm" role="group">
+                                <a th:href="@{'/genero/editar/' + ${g.id}}" 
+                                   class="btn btn-outline-warning btn-sm px-3">
+                                   Editar
+                                </a>
+                                
+                                <button type="button" class="btn btn-outline-danger btn-sm px-3" 
+                                        data-bs-toggle="modal" 
+                                        th:data-bs-target="'#modalExcluir' + ${g.id}">
+                                    Excluir
+                                </button>
+                            </div>
+
+                            <div class="modal fade" th:id="'modalExcluir' + ${g.id}" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content text-center">
+                                        <div class="modal-header border-0">
+                                            <h5 class="modal-title w-100 fw-bold">Confirmar Exclusão</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body py-4">
+                                            <p class="text-muted mb-2">Deseja mesmo excluir este registro?</p>
+                                            <h3 class="nome-destaque" th:text="${g.nome}">NOME</h3>
+                                        </div>
+                                        <div class="modal-footer border-0 d-flex justify-content-center pb-4">
+                                            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                                            <a th:href="@{'/genero/excluir/' + ${g.id}}" class="btn btn-danger px-4">
+                                                Excluir Agora
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

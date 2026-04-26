@@ -13,7 +13,6 @@
 
         body { background-color: var(--cinza-fundo); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
-        /* Cabeçalho Estilizado */
         .header-sistema { 
             background-color: var(--azul-escuro); 
             color: white; 
@@ -34,21 +33,17 @@
             width: 100%;
         }
 
-        /* Cards e Layout */
         .card { border: none; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         
-        /* Ajuste no card-header para aceitar o título laranja */
         .card-header { 
             background-color: transparent; 
             border-bottom: none; 
             padding-top: 20px;
         }
 
-        /* Botões */
         .btn-principal { background-color: var(--laranja); color: white; border: none; font-weight: bold; transition: 0.3s; }
         .btn-principal:hover { background-color: #e67300; transform: translateY(-2px); color: white; }
 
-        /* Tabela */
         .table thead { background-color: var(--azul-escuro); color: white; }
         .badge-genero { background-color: #e3f2fd; color: #0d47a1; padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; }
     </style>
@@ -60,11 +55,24 @@
             <div>
                 <h2 class="m-0">🎬 GESTÃO DE FILMES</h2>
             </div>
-            <a th:href="@{/}" class="btn btn-outline-light btn-sm">Voltar ao Menu</a>
+            <div class="d-flex gap-2">
+                <a th:href="@{/}" class="btn btn-outline-light btn-sm">Voltar ao Menu</a>
+            </div>
         </div>
     </div>
 
     <div class="container">
+
+        <!-- ✅ MENSAGENS -->
+        <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Sucesso!</strong> Filme cadastrado com sucesso.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${param.excluido}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Removido!</strong> Filme excluído com sucesso.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
         
         <div class="card mb-5 p-3">
             <div class="card-header">
@@ -76,10 +84,12 @@
                         <label class="form-label fw-bold">Título</label>
                         <input type="text" name="titulo" class="form-control" placeholder="Ex: O Poderoso Chefão" required>
                     </div>
+                    
                     <div class="col-md-2">
                         <label class="form-label fw-bold">Ano</label>
-                        <input type="number" name="ano" class="form-control" placeholder="2024">
+                        <input type="tel" name="ano" class="form-control" placeholder="2024" maxlength="4">
                     </div>
+
                     <div class="col-md-3">
                         <label class="form-label fw-bold">Diretor</label>
                         <input type="text" name="diretor" class="form-control" placeholder="Nome do Diretor">
@@ -120,7 +130,7 @@
                                 <span th:text="${f.ano}"></span><br>
                                 <small class="text-muted" th:text="${f.diretor}"></small>
                             </td>
-                            <td><span class="badge-genero" th:text="${f.genero}"></span></td>
+                            <td><span class="badge-genero" th:text="${f.genero_nome}"></span></td>
                             <td class="text-center">
                                 <div class="btn-group">
                                     <a th:href="@{'/filme/editar/' + ${f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
@@ -149,6 +159,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </td>
                         </tr>
                     </tbody>

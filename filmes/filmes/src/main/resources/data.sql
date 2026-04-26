@@ -1,7 +1,0 @@
-INSERT INTO genero (nome) VALUES ('ACAO');
-INSERT INTO genero (nome) VALUES ('COMEDIA');
-INSERT INTO genero (nome) VALUES ('DRAMA');
-INSERT INTO genero (nome) VALUES ('FICCAO CIENTIFICA');
-INSERT INTO genero (nome) VALUES ('INFANTIL');
-INSERT INTO genero (nome) VALUES ('ROMANCE');
-INSERT INTO genero (nome) VALUES ('TERROR');

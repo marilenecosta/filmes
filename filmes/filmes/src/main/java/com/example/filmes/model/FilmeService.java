@@ -1,10 +1,10 @@
-package com.example.filmes.model; // Ajustado para a sua pasta
+package com.example.filmes.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class FilmeService {
@@ -13,11 +13,11 @@ public class FilmeService {
     private FilmeDAO filmeDAO;
 
     public List<Map<String, Object>> listarFilmes() {
-        return filmeDAO.listar(); // Usando o nome correto do seu DAO
+        return filmeDAO.listar();
     }
 
     public void salvarFilme(String titulo, Integer ano, String diretor, Integer generoId) {
-        filmeDAO.inserir(titulo, ano, diretor, generoId);
+        filmeDAO.salvar(titulo, ano, diretor, generoId);
     }
 
     public Map<String, Object> buscarPorId(UUID id) {
