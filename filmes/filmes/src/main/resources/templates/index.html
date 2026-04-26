@@ -63,48 +63,72 @@
 
     <div class="container">
 
-        <!-- ✅ MENSAGENS -->
-        <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Sucesso!</strong> Filme cadastrado com sucesso.
+        <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <strong>✨ Sucesso!</strong> Operação realizada no banco de dados.
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <div th:if="${param.excluido}" class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Removido!</strong> Filme excluído com sucesso.
+        <div th:if="${param.excluido}" class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+            <strong>✅ Removido!</strong> Filme excluído com sucesso.
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
         
         <div class="card mb-5 p-3">
             <div class="card-header">
-                <span class="titulo-laranja">Adicionar Novo Filme</span>
+                <span class="titulo-laranja" th:text="${filme == null ? 'Adicionar Novo Filme' : 'Editando Filme'}">
+                    Adicionar Novo Filme
+                </span>
             </div>
             <div class="card-body">
-                <form th:action="@{/filme/salvar}" method="post" class="row g-3">
+                <form th:action="${filme == null ? '/filme/salvar' : '/filme/atualizar'}" method="post" class="row g-3">
+                    
+                    <input type="hidden" name="id" th:value="${filme != null ? filme.id : ''}">
+
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Título</label>
-                        <input type="text" name="titulo" class="form-control" placeholder="Ex: O Poderoso Chefão" required>
+                        <input type="text" name="titulo" class="form-control" 
+                               th:value="${filme != null ? filme.titulo : ''}" 
+                               placeholder="Ex: O Poderoso Chefão" required>
                     </div>
                     
                     <div class="col-md-2">
                         <label class="form-label fw-bold">Ano</label>
-                        <input type="tel" name="ano" class="form-control" placeholder="2024" maxlength="4">
+                        <input type="tel" name="ano" class="form-control" 
+                               th:value="${filme != null ? filme.ano : ''}" 
+                               placeholder="2024" maxlength="4">
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label fw-bold">Diretor</label>
-                        <input type="text" name="diretor" class="form-control" placeholder="Nome do Diretor">
+                        <input type="text" name="diretor" class="form-control" 
+                               th:value="${filme != null ? filme.diretor : ''}" 
+                               placeholder="Nome do Diretor">
                     </div>
+
                     <div class="col-md-3">
                         <label class="form-label fw-bold">Gênero</label>
                         <select name="generoId" class="form-select" required>
                             <option value="">Selecione...</option>
-                            <option th:each="g : ${generos}" th:value="${g.id}" th:text="${g.nome}"></option>
+                            <option th:each="g : ${generos}" 
+                                    th:value="${g.id}" 
+                                    th:text="${g.nome}"
+                                    th:selected="${filme != null and filme.genero_id == g.id}"></option>
                         </select>
                     </div>
+
                     <div class="col-12 text-end">
-                        <button type="submit" class="btn btn-principal px-5">SALVAR FILME</button>
+                        <button type="submit" class="btn btn-principal px-5"
+                                th:text="${filme == null ? 'SALVAR FILME' : 'ATUALIZAR FILME'}">
+                            SALVAR FILME
+                        </button>
                     </div>
                 </form>
+
+                <div th:if="${filme != null}" class="mt-3 text-end">
+                    <a th:href="@{/gerenciar}" class="text-muted small" style="text-decoration: none;">
+                        ✖ Cancelar Edição
+                    </a>
+                </div>
             </div>
         </div>
 

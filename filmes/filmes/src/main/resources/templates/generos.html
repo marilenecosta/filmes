@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>CineFlow | Gestão de Gêneros</title>
+    <title>CineFlow | Gêneros</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
@@ -74,13 +74,23 @@
 
     <div class="container">
         
-        <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Sucesso!</strong> Operação realizada no banco de dados.
+        <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <strong>✨ Sucesso!</strong> Operação realizada no banco de dados.
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <div th:if="${param.excluido}" class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Removido!</strong> O gênero foi excluído com sucesso.
+        <div th:if="${param.excluido}" class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+            <strong>✅ Removido!</strong> O gênero foi excluído com sucesso.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${param.erro != null and param.erro[0] == 'em_uso'}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <strong>❌ Não é possível excluir!</strong> Este gênero possui filmes vinculados a ele. Remova ou altere os filmes antes de excluir o gênero.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${param.erro != null and param.erro[0] == 'inesperado'}" class="alert alert-dark alert-dismissible fade show shadow-sm" role="alert">
+            <strong>⚠️ Ops!</strong> Ocorreu um erro inesperado ao processar a exclusão.
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 

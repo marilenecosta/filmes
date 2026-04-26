@@ -28,15 +28,22 @@ public class PaginaController {
     @GetMapping("/gerenciar")
     public String gerenciar(Model model) {
         List<Map<String, Object>> listaFilmes = filmeService.listarFilmes();
-        List<Genero> listaGeneros = generoService.listarTodos(); // ✅ corrigido
+        List<Genero> listaGeneros = generoService.listarTodos(); 
         
         model.addAttribute("filmes", listaFilmes);
         model.addAttribute("generos", listaGeneros);
+        
+        // Garante que o formulário comece vazio (Modo Adicionar)
+        if (!model.containsAttribute("filme")) {
+            model.addAttribute("filme", null); 
+        }
+        
         return "index";
     }
 
     @PostMapping("/filme/salvar")
-    public String salvar(@RequestParam String titulo,
+    public String salvar(@RequestParam(required = false) UUID id, // Adicionado ID para suportar atualização aqui também
+                        @RequestParam String titulo,
                         @RequestParam(required = false) Integer ano,
                         @RequestParam(required = false) String diretor,
                         @RequestParam Integer generoId) {
@@ -45,16 +52,22 @@ public class PaginaController {
             return "redirect:/gerenciar?erro=ano";
         }
 
-        filmeService.salvarFilme(titulo, ano, diretor, generoId);
+        if (id == null) {
+            filmeService.salvarFilme(titulo, ano, diretor, generoId);
+        } else {
+            filmeService.atualizarFilme(id, titulo, ano, diretor, generoId);
+        }
+        
         return "redirect:/gerenciar?sucesso";
     }
 
     @GetMapping("/filme/editar/{id}")
     public String editar(@PathVariable UUID id, Model model) {
         Map<String, Object> filme = filmeService.buscarPorId(id);
-        model.addAttribute("filme", filme);
-        model.addAttribute("generos", generoService.listarTodos()); // agora é List<Genero>
-        return "editar"; 
+        model.addAttribute("filme", filme); // Envia o filme preenchido
+        model.addAttribute("filmes", filmeService.listarFilmes());
+        model.addAttribute("generos", generoService.listarTodos()); 
+        return "index"; // Alterado para 'index' para editar na mesma tela
     }
 
     @PostMapping("/filme/atualizar")
@@ -78,7 +91,7 @@ public class PaginaController {
     @GetMapping("/generos")
     public String listarPaginaGeneros(Model model) {
         model.addAttribute("generos", generoService.listarTodos());
-        model.addAttribute("generoObj", new Genero()); // ✅ CORREÇÃO PRINCIPAL
+        model.addAttribute("generoObj", new Genero()); 
         return "generos";
     }
 
@@ -96,13 +109,19 @@ public class PaginaController {
     @GetMapping("/genero/editar/{id}")
     public String editarGenero(@PathVariable Integer id, Model model) {
         model.addAttribute("generos", generoService.listarTodos());
-        model.addAttribute("generoObj", generoService.buscarPorId(id)); // já está correto
+        model.addAttribute("generoObj", generoService.buscarPorId(id)); 
         return "generos";
     }
-
+    
     @GetMapping("/genero/excluir/{id}")
     public String excluirGeneroDoSistema(@PathVariable Integer id) {
-        generoService.excluir(id); 
-        return "redirect:/generos?excluido";
+        try {
+            generoService.excluir(id); 
+            return "redirect:/generos?excluido";
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {            
+            return "redirect:/generos?erro=em_uso";
+        } catch (Exception e) {            
+            return "redirect:/generos?erro=inesperado";
+        }
     }
 }
