@@ -1,30 +1,88 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CineFlow - Catálogo de Filmes</title>
+    <style>
+        .navbar { 
+            background-color: #333; 
+            color: white; 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-family: Arial, sans-serif;
+        }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; }
+        .navbar a:hover { color: #ccc; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        
+        .filtro-box { margin: 20px 0; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; }
+    </style>
+</head>
 <body>
 
-<h2>Lista de Filmes</h2>
+<div class="navbar">
+    <div><strong>CineFlow</strong></div>
+    <div>
+        <span th:if="${session.usuarioLogado != null}">
+            Olá, <span th:text="${session.usuarioLogado.nome}">Usuário</span>!
+            <a href="/favoritos">Meus Favoritos</a>
+            <a href="/logout">Sair</a>
+        </span>
+        <span th:if="${session.usuarioLogado == null}">
+            <a href="/login">Fazer Login</a>
+        </span>
+    </div>
+</div>
 
-<table border="1">
-    <tr>
-        <th>Título</th>
-        <th>Diretor</th>
-        <th>Ano</th>
-        <th>Gênero</th>
-        <th>Ação</th>
-    </tr>
+<div style="padding: 20px;">
+    <h2>Lista de Filmes</h2>
 
-    <tr th:each="f : ${filmes}">
-        <td th:text="${f.titulo}"></td>
-        <td th:text="${f.diretor}"></td>
-        <td th:text="${f.ano}"></td>
-        <td th:text="${f.nomeGenero}"></td>
-        <td>
-            <a th:href="@{'/excluir/' + ${f.id}}">Excluir</a>
-        </td>
-    </tr>
-</table>
+    <div class="filtro-box">
+        <form action="/filmes/listar" method="get">
+            <input type="text" name="titulo" th:value="${param.titulo}" placeholder="Buscar por título...">
+            
+            <select name="generoId">
+                <option value="">Todos os Gêneros</option>
+                <option th:each="g : ${generos}" 
+                        th:value="${g.id}" 
+                        th:text="${g.nome}"
+                        th:selected="${#strings.toString(g.id) == param.generoId}">
+                </option>
+            </select>
+            
+            <button type="submit">Filtrar</button>
+            <a href="/filmes/listar">Limpar</a>
+        </form>
+    </div>
 
-<a href="/filme">Novo Filme</a>
+    <table>
+        <tr>
+            <th>Título</th>
+            <th>Diretor</th>
+            <th>Ano</th>
+            <th>Gênero</th>
+            <th>Ação</th>
+        </tr>
+
+        <tr th:each="f : ${filmes}">
+            <td th:text="${f.titulo}"></td>
+            <td th:text="${f.diretor}"></td>
+            <td th:text="${f.ano}"></td>
+            <td th:text="${f.genero_nome}"></td>
+            <td>
+                <a th:href="@{'/excluir/' + ${f.id}}">Excluir</a>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    <a href="/filme">Cadastrar Novo Filme</a>
+</div>
 
 </body>
 </html>

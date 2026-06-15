@@ -20,7 +20,6 @@
             min-height: 100vh;
         }
 
-        /* Faixa Azul do Cabeçalho com Linha Laranja */
         .header-sistema { 
             background-color: var(--azul-escuro); 
             color: white; 
@@ -33,20 +32,19 @@
         .header-sistema h1 { font-weight: 800; letter-spacing: 2px; margin: 0; font-size: 2.5rem; }
         .header-sistema p { color: var(--laranja); font-weight: bold; margin-top: 5px; text-transform: uppercase; }
 
-        /* Área Central Centralizada */
         .main-content {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 40px; /* Espaço entre os dois botões */
-            padding: 50px;
+            flex-wrap: wrap;
+            gap: 25px; 
+            padding: 40px 20px;
         }
 
-        /* Estilo dos Botões (Cards Laranja) */
         .card-home {
-            width: 280px;
-            height: 250px;
+            width: 240px;
+            height: 220px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -57,6 +55,8 @@
             transition: 0.3s;
             background-color: var(--laranja);
             color: white;
+            text-align: center;
+            padding: 15px;
         }
 
         .card-home:hover {
@@ -65,10 +65,9 @@
             color: white;
         }
 
-        .card-icon { font-size: 70px; margin-bottom: 15px; }
-        .card-text { font-weight: bold; text-transform: uppercase; font-size: 1.1rem; }
+        .card-icon { font-size: 55px; margin-bottom: 10px; }
+        .card-text { font-weight: bold; text-transform: uppercase; font-size: 1rem; letter-spacing: 0.5px; }
 
-        /* Rodapé Azul com Linha Laranja */
         .footer-sistema {
             background-color: var(--azul-escuro);
             padding: 25px 0;
@@ -93,14 +92,24 @@
     </div>
 
     <div class="main-content">
-        <a th:href="@{/gerenciar}" class="card-home">
-            <div class="card-icon">🎬</div>
-            <div class="card-text">Catálogo de Filmes</div>
+        <a th:href="@{/gerenciar(acao='cadastrar')}" class="card-home">
+            <div class="card-icon">➕</div>
+            <div class="card-text">Cadastrar Filme</div>
         </a>
 
-        <a th:href="@{/generos}" class="card-home">
+        <a th:href="@{/gerenciar(acao='pesquisar')}" class="card-home">
+            <div class="card-icon">🔍</div>
+            <div class="card-text">Pesquisar Filme</div>
+        </a>
+
+        <a th:href="@{/gerenciar}" class="card-home">
+            <div class="card-icon">🎬</div>
+            <div class="card-text">Listar Catálogo</div>
+        </a>
+
+        <a th:href="@{/generos}" class="card-home" style="background-color: var(--azul-escuro); border: 2px solid var(--laranja);">
             <div class="card-icon">📋</div>
-            <div class="card-text">Gênero</div>
+            <div class="card-text">Gêneros</div>
         </a>
     </div>
 
