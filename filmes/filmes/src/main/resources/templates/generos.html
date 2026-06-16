@@ -70,18 +70,13 @@
 
     <div class="container">
         
-        <div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-            <strong>✨ Sucesso!</strong> Operação realizada no banco de dados.
+        <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <strong>✨ Sucesso!</strong> <span th:text="${sucesso}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <div th:if="${param.excluido}" class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-            <strong>✅ Removido!</strong> O gênero foi excluído com sucesso.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-
-        <div th:if="${param.erro != null and param.erro[0] == 'em_uso'}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-            <strong>❌ Não é possível excluir!</strong> Este gênero possui filmes vinculados a ele.
+        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <strong>❌ Atenção!</strong> <span th:text="${erro}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 

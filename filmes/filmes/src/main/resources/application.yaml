@@ -3,14 +3,15 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-d8ho0vldt1ts73egrhdg-a.oregon-postgres.render.com:5432/cineflow_ccpu?sslmode=require
-    username: cineflow_ccpu_user
-    password: 3YPEoRRMWfM1KsjTEPcIAhvnSeBwlIir
+    # O Render vai substituir estas variáveis pelos valores reais que você colocará no "Environment"
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update # Voltou para update para manter os teus dados salvos
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -18,4 +19,5 @@ spring:
 
   sql:
     init:
-      mode: always
+      # Alterado para 'never' para evitar erros de tentativa de criação de tabelas no deploy
+      mode: never
