@@ -8,17 +8,11 @@
     --branco-gelo: #f4f7f6;
 }
 
-/* Ajuste de fundo para evitar o branco puro e dar profundidade */
 body {
     background-color: var(--branco-gelo);
-    /* Um degradê radial sutil para dar elegância ao fundo de todas as páginas */
-    background: radial-gradient(circle, #ffffff 0%, #eef2f3 100%);
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 .header-sistema {
@@ -46,7 +40,7 @@ body {
     color: var(--laranja-alfa) !important;
     text-align: center !important;
     font-weight: bold !important;
-    font-size: 1.8rem !important;
+    font-size: 1.8rem !important; /* Tamanho idêntico para ambos */
     padding: 20px !important;
     border: none !important;
     text-transform: uppercase;
@@ -59,21 +53,6 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
     overflow: hidden;
     margin-bottom: 30px;
-}
-
-/* Classes específicas para centralizar o Login e dar destaque */
-.login-container {
-    margin: auto;
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-}
-
-.card-login {
-    background: white;
-    padding: 30px;
-    border-radius: 25px !important;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
 }
 
 .btn-primary {
