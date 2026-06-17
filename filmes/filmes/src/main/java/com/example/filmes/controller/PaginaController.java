@@ -19,7 +19,8 @@ public class PaginaController {
     private void adicionarContadorFavoritos(Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado != null) {
-            model.addAttribute("totalFavoritos", favoritoDAO.buscarFavoritosDoUsuario(usuarioLogado.getId()).size());
+            int total = favoritoDAO.buscarFavoritosDoUsuario(usuarioLogado.getId()).size();
+            model.addAttribute("totalFavoritos", total);
         }
     }
 
@@ -32,8 +33,6 @@ public class PaginaController {
                             Model model, HttpSession session) {
         
         adicionarContadorFavoritos(model, session);
-        
-        // Mantendo a compatibilidade com a sua estrutura original
         model.addAttribute("filmes", filmeService.buscarFilmes(titulo, generoId));
         model.addAttribute("generos", generoService.listarTodos());
         
@@ -41,6 +40,8 @@ public class PaginaController {
             model.addAttribute("filme", null); 
         }
         
+        // O Spring MVC injeta automaticamente o 'mensagem' (via FlashAttribute) 
+        // enviado pelo LoginController ou outros métodos neste model.
         return "index";
     }
 
@@ -51,11 +52,16 @@ public class PaginaController {
                          @RequestParam(required = false) String diretor,
                          @RequestParam Integer generoId,
                          RedirectAttributes redirectAttributes) {
+        
         try {
-            if (id == null) filmeService.salvarFilme(titulo, ano, diretor, generoId);
-            else filmeService.atualizarFilme(id, titulo, ano, diretor, generoId);
+            if (id == null) {
+                filmeService.salvarFilme(titulo, ano, diretor, generoId);
+            } else {
+                filmeService.atualizarFilme(id, titulo, ano, diretor, generoId);
+            }
             redirectAttributes.addFlashAttribute("sucesso", "Operação realizada com sucesso!");
             return "redirect:/gerenciar";
+            
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("erro", e.getMessage());
             return "redirect:/gerenciar";
@@ -95,6 +101,7 @@ public class PaginaController {
         return "redirect:/gerenciar";
     }
 
+    // --- GÊNEROS ---
     @GetMapping("/generos")
     public String listarPaginaGeneros(Model model) {
         model.addAttribute("generos", generoService.listarTodos());
@@ -107,5 +114,25 @@ public class PaginaController {
         if (id == null || id == 0) generoService.salvarNovo(nome);
         else generoService.atualizarExistente(id, nome);
         return "redirect:/generos?sucesso";
+    }
+
+    @GetMapping("/genero/editar/{id}")
+    public String editarGenero(@PathVariable Integer id, Model model) {
+        model.addAttribute("generos", generoService.listarTodos());
+        model.addAttribute("generoObj", generoService.buscarPorId(id)); 
+        return "generos";
+    }
+    
+    @GetMapping("/genero/excluir/{id}")
+    public String excluirGeneroDoSistema(@PathVariable Integer id, RedirectAttributes ra) {
+        try {
+            generoService.excluir(id); 
+            return "redirect:/generos?excluido";
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {           
+            ra.addFlashAttribute("erro", "Não é possível excluir: gênero em uso.");
+            return "redirect:/generos";
+        } catch (Exception e) {           
+            return "redirect:/generos?erro=inesperado";
+        }
     }
 }
