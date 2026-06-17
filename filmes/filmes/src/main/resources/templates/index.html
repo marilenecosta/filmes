@@ -92,7 +92,7 @@
                         <td th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}"></td>
                         <td class="text-end">
                             <div class="d-flex justify-content-end gap-1">
-                                <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-favorito="${f.jaFavoritado}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
+                                <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-favorito="${f['jaFavoritado'] != null ? f['jaFavoritado'] : false}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
                                 <a th:href="@{'/filme/editar/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
                                 <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
                             </div>
@@ -111,7 +111,7 @@
                             <span class="badge bg-light text-primary border" style="font-size: 0.7rem;" th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}">Gênero</span>
                         </div>
                         <div class="card-footer bg-transparent border-0 d-flex justify-content-center gap-1 pb-2">
-                            <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-favorito="${f.jaFavoritado}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
+                            <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-favorito="${f['jaFavoritado'] != null ? f['jaFavoritado'] : false}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
                             <a th:href="@{'/filme/editar/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
                             <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
                         </div>
