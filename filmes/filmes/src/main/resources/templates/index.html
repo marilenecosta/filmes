@@ -72,28 +72,27 @@
             </form>
         </div>
 
-        <!-- LISTAGEM: TABELA SE FOR PESQUISA, CARDS SE FOR CATÁLOGO -->
         <div id="secaoLista" th:if="${(param.acao != null and param.acao[0] == 'pesquisar') or (param.acao == null and filme == null)}">
             
-            <!-- TABELA PARA PESQUISA -->
             <table class="table table-hover table-striped" th:if="${param.acao != null and param.acao[0] == 'pesquisar'}">
-                <thead class="table-dark"><tr><th>Título</th><th>Ano</th><th>Diretor</th><th>Gênero</th><th class="text-center">Ações</th></tr></thead>
+                <thead class="table-dark"><tr><th>Título</th><th>Ano</th><th>Diretor</th><th>Gênero</th><th class="text-end">Ações</th></tr></thead>
                 <tbody>
                     <tr th:each="f : ${filmes}">
                         <td th:text="${f['titulo'] != null ? f['titulo'] : f.titulo}"></td>
                         <td th:text="${f['ano'] != null ? f['ano'] : f.ano}"></td>
                         <td th:text="${f['diretor'] != null ? f['diretor'] : f.diretor}"></td>
                         <td th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}"></td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
-                            <a th:href="@{'/filme/editar/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
-                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
+                        <td class="text-end">
+                            <div class="d-flex justify-content-end gap-1">
+                                <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
+                                <a th:href="@{'/filme/editar/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <!-- CARDS PARA CATÁLOGO -->
             <div class="row row-cols-1 row-cols-md-4 row-cols-lg-5 g-3" th:if="${param.acao == null and filme == null}">
                 <div class="col" th:each="f : ${filmes}">
                     <div class="card">
@@ -109,7 +108,6 @@
                             <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
                         </div>
                     </div>
-                    <!-- Modal de exclusão -->
                     <div class="modal fade" th:id="'modal' + ${f['id'] != null ? f['id'] : f.id}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Confirmar Exclusão</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body text-center"><p>Deseja excluir?</p><h4 class="fw-bold" th:text="${f['titulo'] != null ? f['titulo'] : f.titulo}"></h4></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><a th:href="@{'/filme/excluir/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-danger">Excluir Agora</a></div></div></div>
                     </div>
@@ -119,13 +117,28 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalAvisoLogin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">Acesso Restrito</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body text-center">
+                    <p>Ops! Para favoritar filmes, você precisa estar logado.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <a href="/login" class="btn btn-primary">Ir para Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function tentarFavoritar(botao) {
             const logado = botao.getAttribute('data-logado') === 'true';
             if (!logado) {
-                alert("Ops! Para favoritar filmes, você precisa estar logado. Vamos entrar?");
-                window.location.href = "/login";
+                var meuModal = new bootstrap.Modal(document.getElementById('modalAvisoLogin'));
+                meuModal.show();
             } else {
                 const url = botao.getAttribute('data-url');
                 const form = document.createElement('form');
