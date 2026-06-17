@@ -14,6 +14,15 @@ CREATE TABLE IF NOT EXISTS filme (
     FOREIGN KEY (genero_id) REFERENCES genero(id)
 );
 
+-- Bloco de segurança para adicionar a coluna de imagem sem erros
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name='filme' AND column_name='url_imagem') THEN
+        ALTER TABLE filme ADD COLUMN url_imagem VARCHAR(500);
+    END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS usuario (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nome VARCHAR(100) NOT NULL,
@@ -32,6 +41,6 @@ INSERT INTO usuario (nome, email, password)
 VALUES ('Mari', 'mari@email.com', '123456')
 ON CONFLICT (email) DO NOTHING;
 
--- ADICIONE ESTES ÍNDICES PARA MELHORAR A PERFORMANCE E ORGANIZAÇÃO:
+-- ÍNDICES PARA PERFORMANCE
 CREATE INDEX IF NOT EXISTS idx_filme_titulo ON filme(titulo);
 CREATE INDEX IF NOT EXISTS idx_genero_nome ON genero(nome);

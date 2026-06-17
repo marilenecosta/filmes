@@ -20,23 +20,23 @@ public class FilmeService {
     }
 
     // SALVAR FILME COM VALIDAÇÃO (REGRA DE NEGÓCIO)
-    public void salvarFilme(String titulo, Integer ano, String diretor, Integer generoId) {
+    public void salvarFilme(String titulo, Integer ano, String diretor, Integer generoId, String urlImagem) {
         // Validação: Título deve ter ao menos 3 caracteres
         if (titulo == null || titulo.trim().length() < 3) {
             throw new IllegalArgumentException("titulo_curto");
         }
         
-        // Validação: Ano não pode ser futuro (compara com o ano vigente: 2026)
+        // Validação: Ano não pode ser futuro
         int anoAtual = Year.now().getValue();
         if (ano == null || ano > anoAtual) {
             throw new IllegalArgumentException("ano_invalido");
         }
 
-        filmeDAO.salvar(titulo, ano, diretor, generoId);
+        filmeDAO.salvar(titulo, ano, diretor, generoId, urlImagem);
     }
 
     // ATUALIZAR FILME COM VALIDAÇÃO
-    public void atualizarFilme(UUID id, String titulo, Integer ano, String diretor, Integer generoId) {
+    public void atualizarFilme(UUID id, String titulo, Integer ano, String diretor, Integer generoId, String urlImagem) {
         // Validação de título
         if (titulo == null || titulo.trim().length() < 3) {
             throw new IllegalArgumentException("titulo_curto");
@@ -48,7 +48,7 @@ public class FilmeService {
             throw new IllegalArgumentException("ano_invalido");
         }
         
-        filmeDAO.atualizar(id, titulo, ano, diretor, generoId);
+        filmeDAO.atualizar(id, titulo, ano, diretor, generoId, urlImagem);
     }
 
     // BUSCAR POR ID
