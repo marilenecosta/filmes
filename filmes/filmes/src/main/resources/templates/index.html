@@ -5,96 +5,90 @@
     <title>CineFlow | Filmes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
-            --azul-escuro: #001f3f;
-            --laranja: #ff851b;
-            --cinza-fundo: #f4f7f6;
-        }
+        :root { --azul-escuro: #001f3f; --laranja: #ff851b; --cinza-fundo: #f4f7f6; }
         body { background-color: var(--cinza-fundo); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .header-sistema { background-color: var(--azul-escuro); color: white; padding: 20px 0; border-bottom: 6px solid var(--laranja); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .titulo-laranja { color: var(--laranja) !important; font-weight: bold !important; text-align: center !important; font-size: 1.8rem !important; text-transform: uppercase; margin-bottom: 20px; display: block; width: 100%; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
         .btn-principal { background-color: var(--laranja); color: white; border: none; font-weight: bold; transition: 0.3s; }
         .btn-principal:hover { background-color: #e67300; transform: translateY(-2px); color: white; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
     <div class="header-sistema mb-5">
         <div class="container d-flex justify-content-between align-items-center">
-            <div>
-                <h2 class="m-0">
-                    <span th:if="${param.acao != null and param.acao[0] == 'cadastrar'}">➕ CADASTRAR NOVO FILME</span>
-                    <span th:if="${param.acao != null and param.acao[0] == 'pesquisar'}">🔍 PESQUISAR NO ACERVO</span>
-                    <span th:if="${filme != null}">📝 EDITAR DADOS DO FILME</span>
-                    <span th:if="${param.acao == null and filme == null}">🎬 CATÁLOGO DE FILMES</span>
-                </h2>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <span class="fw-bold text-light" th:if="${session.usuarioLogado}">Olá, <span th:text="${session.usuarioLogado.nome}">Usuário</span>!</span>
-                <div class="d-flex gap-2">
-                    <a th:href="@{/}" class="btn btn-outline-light btn-sm">Voltar ao Menu</a>
-                    <a th:if="${session.usuarioLogado}" href="/favoritos" class="btn btn-warning btn-sm position-relative">⭐ Favoritos <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" th:text="${totalFavoritos != null ? totalFavoritos : 0}">0</span></a>
-                    <a th:if="${session.usuarioLogado == null}" href="/login" class="btn btn-outline-light btn-sm">Entrar 🔑</a>
-                    <a th:if="${session.usuarioLogado}" th:href="@{/logout}" class="btn btn-danger btn-sm">Sair 🚪</a>
-                </div>
+            <h2>
+                <span th:if="${param.acao != null and param.acao[0] == 'cadastrar'}">➕ CADASTRAR NOVO FILME</span>
+                <span th:if="${param.acao != null and param.acao[0] == 'pesquisar'}">🔍 PESQUISAR NO ACERVO</span>
+                <span th:if="${filme != null}">📝 EDITAR DADOS DO FILME</span>
+                <span th:if="${param.acao == null and filme == null}">🎬 CATÁLOGO DE FILMES</span>
+            </h2>
+            <div class="d-flex gap-2">
+                <a th:href="@{/}" class="btn btn-outline-light btn-sm">Menu</a>
+                <a th:if="${session.usuarioLogado}" href="/favoritos" class="btn btn-warning btn-sm">⭐ Favoritos</a>
+                <a th:if="${session.usuarioLogado == null}" href="/login" class="btn btn-outline-light btn-sm">Entrar</a>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <div th:if="${mensagem}" class="alert alert-info alert-dismissible fade show shadow-sm" role="alert"><strong>👋 Informação:</strong> <span th:text="${mensagem}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert"><strong>⚠️ Atenção:</strong> <span th:text="${erro}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-        <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert"><strong>✨ Sucesso!</strong> <span th:text="${sucesso}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-        
-        <div id="secaoFormulario" th:if="${(param.acao != null and param.acao[0] == 'cadastrar') or filme != null}">
-            <div class="card mb-5 p-3">
-                <div class="card-body">
-                    <form th:action="${filme == null ? '/filme/salvar' : '/filme/atualizar'}" method="post" class="row g-3">
-                        <input type="hidden" name="id" th:value="${filme != null ? (filme['id'] != null ? filme['id'] : filme.id) : ''}">
-                        <div class="col-md-4"><label class="form-label fw-bold">Título</label><input type="text" name="titulo" class="form-control" th:value="${filme != null ? (filme['titulo'] != null ? filme['titulo'] : filme.titulo) : ''}" required></div>
-                        <div class="col-md-2"><label class="form-label fw-bold">Ano</label><input type="text" name="ano" class="form-control" th:value="${filme != null ? (filme['ano'] != null ? filme['ano'] : filme.ano) : ''}" required></div>
-                        <div class="col-md-3"><label class="form-label fw-bold">Diretor</label><input type="text" name="diretor" class="form-control" th:value="${filme != null ? (filme['diretor'] != null ? filme['diretor'] : filme.diretor) : ''}" required></div>
-                        <div class="col-md-3"><label class="form-label fw-bold">Gênero</label><select name="generoId" class="form-select" required><option value="">Selecione...</option><option th:each="g : ${generos}" th:value="${g.id}" th:text="${g.nome}" th:selected="${filme != null and (#strings.toString(filme['genero_id'] != null ? filme['genero_id'] : filme.generoId) == #strings.toString(g.id))}"></option></select></div>
-                        <div class="col-12 text-end"><button type="submit" class="btn btn-principal px-5"><span th:if="${filme == null}">SALVAR FILME</span><span th:if="${filme != null}">ATUALIZAR FILME</span></button></div>
-                    </form>
-                    <div class="mt-3 text-end"><a th:href="@{/gerenciar}" class="text-muted small" style="text-decoration: none;">✖ Cancelar / Voltar</a></div>
-                </div>
-            </div>
-        </div>
+        <div th:if="${mensagem}" class="alert alert-info" th:text="${mensagem}"></div>
+        <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+        <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
 
-        <div class="card mb-4 p-3" id="secaoPesquisa" th:if="${param.acao != null and param.acao[0] == 'pesquisar'}">
-            <form action="/gerenciar" method="get" class="row g-2">
-                <div class="col-md-10"><input type="text" name="titulo" id="inputPesquisa" class="form-control" placeholder="Pesquisar filme pelo título" required></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-principal w-100">🔍 Pesquisar</button></div>
+        <div class="card p-4 mb-4" th:if="${param.acao != null and param.acao[0] == 'pesquisar'}">
+            <form action="/gerenciar" method="get" class="row g-2 mb-4">
+                <input type="hidden" name="acao" value="pesquisar">
+                <div class="col-md-10"><input type="text" name="titulo" id="inputPesquisa" class="form-control" placeholder="Título do filme..." required></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-principal w-100">Pesquisar</button></div>
             </form>
+            
+            <table class="table table-hover align-middle" th:if="${!#lists.isEmpty(filmes)}">
+                <thead class="table-dark">
+                    <tr><th>Título</th><th>Ano</th><th>Diretor</th><th>Gênero</th><th class="text-center">Ações</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="f : ${filmes}">
+                        <td th:text="${f['titulo'] != null ? f['titulo'] : f.titulo}"></td>
+                        <td th:text="${f['ano'] != null ? f['ano'] : f.ano}"></td>
+                        <td th:text="${f['diretor'] != null ? f['diretor'] : f.diretor}"></td>
+                        <td><span class="badge bg-primary" th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}"></span></td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-outline-warning btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-4 row-cols-lg-5 g-3" id="secaoLista" th:if="${(param.acao != null and param.acao[0] == 'pesquisar') or (param.acao == null and filme == null)}">
+        <div class="row row-cols-1 row-cols-md-4 g-4" th:if="${param.acao == null and filme == null}">
             <div class="col" th:each="f : ${filmes}">
-                <div class="card">
-                    <div class="card-body text-center p-3">
-                        <div class="mb-2 text-secondary" style="font-size: 1.5rem;">🎬</div>
-                        <h6 class="card-title fw-bold mb-1" th:text="${f['titulo'] != null ? f['titulo'] : f.titulo}">Título</h6>
-                        <p class="card-text text-muted small mb-2"><span th:text="${f['ano'] != null ? f['ano'] : f.ano}">Ano</span> • <span th:text="${f['diretor'] != null ? f['diretor'] : f.diretor}">Diretor</span></p>
-                        <span class="badge bg-light text-primary border" style="font-size: 0.7rem;" th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}">Gênero</span>
-                    </div>
-                    <div class="card-footer bg-transparent border-0 d-flex justify-content-center gap-1 pb-2">
-                        <form th:action="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" method="post"><button type="submit" class="btn btn-outline-success btn-sm">⭐</button></form>
-                        <a th:href="@{'/filme/editar/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
-                    </div>
-                </div>
-                <div class="modal fade" th:id="'modal' + ${f['id'] != null ? f['id'] : f.id}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Confirmar Exclusão</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body text-center"><p>Deseja excluir?</p><h4 class="fw-bold" th:text="${f['titulo'] != null ? f['titulo'] : f.titulo}"></h4></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><a th:href="@{'/filme/excluir/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-danger">Excluir Agora</a></div></div></div>
+                <div class="card h-100 text-center p-3">
+                    <div class="mb-2" style="font-size: 2rem;">🎬</div>
+                    <h6 class="fw-bold" th:text="${f['titulo'] != null ? f['titulo'] : f.titulo}"></h6>
+                    <p class="text-muted small" th:text="${(f['ano'] != null ? f['ano'] : f.ano) + ' • ' + (f['diretor'] != null ? f['diretor'] : f.diretor)}"></p>
+                    <button type="button" class="btn btn-outline-warning btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">Favoritar ⭐</button>
                 </div>
             </div>
-            <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(filmes)}"><p class="text-muted">Nenhum filme localizado no acervo.</p></div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>window.addEventListener('DOMContentLoaded', () => { const inputPesquisa = document.getElementById('inputPesquisa'); if (inputPesquisa) inputPesquisa.focus(); });</script>
+    <script>
+        function tentarFavoritar(botao) {
+            const logado = botao.getAttribute('data-logado') === 'true';
+            if (!logado) {
+                alert("Ops! Para favoritar, você precisa estar logado.");
+                window.location.href = "/login";
+            } else {
+                const url = botao.getAttribute('data-url');
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
 </body>
 </html>
