@@ -43,6 +43,15 @@
         </div>
     </div>
 
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMensagem"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div th:if="${mensagem}" class="alert alert-info alert-dismissible fade show shadow-sm" role="alert"><strong>👋 Informação:</strong> <span th:text="${mensagem}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
         <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert"><strong>⚠️ Atenção:</strong> <span th:text="${erro}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
@@ -73,7 +82,6 @@
         </div>
 
         <div id="secaoLista" th:if="${(param.acao != null and param.acao[0] == 'pesquisar') or (param.acao == null and filme == null)}">
-            
             <table class="table table-hover table-striped" th:if="${param.acao != null and param.acao[0] == 'pesquisar'}">
                 <thead class="table-dark"><tr><th>Título</th><th>Ano</th><th>Diretor</th><th>Gênero</th><th class="text-end">Ações</th></tr></thead>
                 <tbody>
@@ -84,7 +92,7 @@
                         <td th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}"></td>
                         <td class="text-end">
                             <div class="d-flex justify-content-end gap-1">
-                                <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
+                                <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-favorito="${f.jaFavoritado}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
                                 <a th:href="@{'/filme/editar/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
                                 <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
                             </div>
@@ -103,7 +111,7 @@
                             <span class="badge bg-light text-primary border" style="font-size: 0.7rem;" th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}">Gênero</span>
                         </div>
                         <div class="card-footer bg-transparent border-0 d-flex justify-content-center gap-1 pb-2">
-                            <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
+                            <button type="button" class="btn btn-outline-success btn-sm" th:data-logado="${session.usuarioLogado != null}" th:data-favorito="${f.jaFavoritado}" th:data-url="@{'/filme/' + ${f['id'] != null ? f['id'] : f.id} + '/favoritar'}" onclick="tentarFavoritar(this)">⭐</button>
                             <a th:href="@{'/filme/editar/' + ${f['id'] != null ? f['id'] : f.id}}" class="btn btn-outline-warning btn-sm">Editar</a>
                             <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modal' + ${f['id'] != null ? f['id'] : f.id}">Excluir</button>
                         </div>
@@ -121,13 +129,8 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header"><h5 class="modal-title">Acesso Restrito</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body text-center">
-                    <p>Ops! Para favoritar filmes, você precisa estar logado.</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <a href="/login" class="btn btn-primary">Ir para Login</a>
-                </div>
+                <div class="modal-body text-center"><p>Ops! Para favoritar filmes, você precisa estar logado.</p></div>
+                <div class="modal-footer justify-content-center"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><a href="/login" class="btn btn-primary">Ir para Login</a></div>
             </div>
         </div>
     </div>
@@ -136,16 +139,24 @@
     <script>
         function tentarFavoritar(botao) {
             const logado = botao.getAttribute('data-logado') === 'true';
+            const jaFavorito = botao.getAttribute('data-favorito') === 'true';
+            
             if (!logado) {
-                var meuModal = new bootstrap.Modal(document.getElementById('modalAvisoLogin'));
-                meuModal.show();
+                new bootstrap.Modal(document.getElementById('modalAvisoLogin')).show();
+            } else if (jaFavorito) {
+                const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                document.getElementById('toastMensagem').innerText = "⚠️ Este filme já está nos seus favoritos!";
+                document.getElementById('liveToast').className = "toast align-items-center text-white bg-warning border-0";
+                toast.show();
             } else {
-                const url = botao.getAttribute('data-url');
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = url;
-                document.body.appendChild(form);
-                form.submit();
+                fetch(botao.getAttribute('data-url'), { method: 'POST' })
+                .then(() => {
+                    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                    document.getElementById('toastMensagem').innerText = "✨ Filme adicionado aos favoritos!";
+                    document.getElementById('liveToast').className = "toast align-items-center text-white bg-success border-0";
+                    toast.show();
+                    botao.setAttribute('data-favorito', 'true');
+                });
             }
         }
         window.addEventListener('DOMContentLoaded', () => { const inputPesquisa = document.getElementById('inputPesquisa'); if (inputPesquisa) inputPesquisa.focus(); });
