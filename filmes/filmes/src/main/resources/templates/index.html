@@ -153,10 +153,20 @@
                 fetch(botao.getAttribute('data-url'), { method: 'POST' })
                 .then(() => {
                     const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-                    document.getElementById('toastMensagem').innerText = "✨ Filme adicionado aos favoritos!";
-                    document.getElementById('liveToast').className = "toast align-items-center text-white bg-success border-0";
+
+                    document.getElementById('toastMensagem').innerText =
+                        "✨ Filme adicionado aos favoritos!";
+
+                    document.getElementById('liveToast').className =
+                        "toast align-items-center text-white bg-success border-0";
+
                     toast.show();
+
                     botao.setAttribute('data-favorito', 'true');
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 800);
                 });
             }
         }
