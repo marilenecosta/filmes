@@ -196,23 +196,15 @@
                 return;
             }
 
+            // Se chegou aqui, é porque realmente não é favorito
             fetch(botao.getAttribute('data-url'), { method: 'POST' })
             .then(response => {
                 if (response.ok) {
-                    // Exibe a mensagem de sucesso
-                    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-                    document.getElementById('toastMensagem').innerText = "✨ Filme adicionado aos favoritos!";
-                    document.getElementById('liveToast').className = "toast align-items-center text-white bg-success border-0";
-                    toast.show();
-
-                    // ESPERA 1.5 SEGUNDOS (tempo de ler a mensagem) E RECARREGA
-                    // Isso garante que o valor do contador venha CERTO do banco de dados
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500); 
+                    // Recarrega a página para buscar o dado real do Banco de Dados
+                    // Isso força o contador a mostrar o número correto vindo do Controller
+                    location.reload(); 
                 }
-            })
-            .catch(error => console.error("Erro:", error));
+            });
         }
     </script>
 </body>
