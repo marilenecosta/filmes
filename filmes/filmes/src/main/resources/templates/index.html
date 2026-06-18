@@ -181,45 +181,30 @@
     <script>
         function tentarFavoritar(botao) {
             const logado = botao.getAttribute('data-logado') === 'true';
-            // Pega o valor atual do atributo no HTML
             const jaFavorito = botao.getAttribute('data-favorito') === 'true';
 
-            // 1. Regra: Precisa estar logado
             if (!logado) {
                 new bootstrap.Modal(document.getElementById('modalAvisoLogin')).show();
                 return;
             }
 
-            // 2. Regra: Verifica se já está nos favoritos
             if (jaFavorito) {
                 const toast = new bootstrap.Toast(document.getElementById('liveToast'));
                 document.getElementById('toastMensagem').innerText = "⚠️ Este filme já está nos seus favoritos!";
                 document.getElementById('liveToast').className = "toast align-items-center text-white bg-warning border-0";
                 toast.show();
-                return; // INTERROMPE a função aqui, não faz o fetch!
+                return;
             }
 
-            // 3. Ação: Se não é favorito, executa o pedido
+            // Se chegou aqui, é porque realmente não é favorito
             fetch(botao.getAttribute('data-url'), { method: 'POST' })
             .then(response => {
                 if (response.ok) {
-                    // Feedback de sucesso
-                    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-                    document.getElementById('toastMensagem').innerText = "✨ Filme adicionado aos favoritos!";
-                    document.getElementById('liveToast').className = "toast align-items-center text-white bg-success border-0";
-                    toast.show();
-
-                    // Atualiza o estado visual do botão para evitar cliques duplos
-                    botao.setAttribute('data-favorito', 'true');
-
-                    // Atualiza o contador apenas se o pedido funcionou
-                    const contador = document.getElementById('contadorFavoritos');
-                    if (contador) {
-                        contador.innerText = parseInt(contador.innerText) + 1;
-                    }
+                    // Recarrega a página para buscar o dado real do Banco de Dados
+                    // Isso força o contador a mostrar o número correto vindo do Controller
+                    location.reload(); 
                 }
-            })
-            .catch(error => console.error("Erro ao favoritar:", error));
+            });
         }
     </script>
 </body>
