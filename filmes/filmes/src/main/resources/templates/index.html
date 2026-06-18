@@ -181,38 +181,46 @@
     <script>
         function tentarFavoritar(botao) {
             const logado = botao.getAttribute('data-logado') === 'true';
+            // Pega o valor atual do atributo no HTML
             const jaFavorito = botao.getAttribute('data-favorito') === 'true';
+
+            // 1. Regra: Precisa estar logado
             if (!logado) {
                 new bootstrap.Modal(document.getElementById('modalAvisoLogin')).show();
-            } else if (jaFavorito) {
+                return;
+            }
+
+            // 2. Regra: Verifica se já está nos favoritos
+            if (jaFavorito) {
                 const toast = new bootstrap.Toast(document.getElementById('liveToast'));
                 document.getElementById('toastMensagem').innerText = "⚠️ Este filme já está nos seus favoritos!";
                 document.getElementById('liveToast').className = "toast align-items-center text-white bg-warning border-0";
                 toast.show();
-            } else {
-                fetch(botao.getAttribute('data-url'), { method: 'POST' })
-                .then(() => {
+                return; // INTERROMPE a função aqui, não faz o fetch!
+            }
+
+            // 3. Ação: Se não é favorito, executa o pedido
+            fetch(botao.getAttribute('data-url'), { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    // Feedback de sucesso
                     const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-
-                    document.getElementById('toastMensagem').innerText =
-                        "✨ Filme adicionado aos favoritos!";
-
-                    document.getElementById('liveToast').className =
-                        "toast align-items-center text-white bg-success border-0";
-
+                    document.getElementById('toastMensagem').innerText = "✨ Filme adicionado aos favoritos!";
+                    document.getElementById('liveToast').className = "toast align-items-center text-white bg-success border-0";
                     toast.show();
 
+                    // Atualiza o estado visual do botão para evitar cliques duplos
                     botao.setAttribute('data-favorito', 'true');
 
-                        const contador = document.getElementById('contadorFavoritos');
-
-                        if (contador) {
-                            contador.innerText = parseInt(contador.innerText) + 1;
-                        }
-                });
-            }
+                    // Atualiza o contador apenas se o pedido funcionou
+                    const contador = document.getElementById('contadorFavoritos');
+                    if (contador) {
+                        contador.innerText = parseInt(contador.innerText) + 1;
+                    }
+                }
+            })
+            .catch(error => console.error("Erro ao favoritar:", error));
         }
-        window.addEventListener('DOMContentLoaded', () => { const inputPesquisa = document.getElementById('inputPesquisa'); if (inputPesquisa) inputPesquisa.focus(); });
     </script>
 </body>
 </html>
