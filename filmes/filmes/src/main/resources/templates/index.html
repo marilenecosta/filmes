@@ -137,7 +137,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         function tentarFavoritar(botao) {
             const logado = botao.getAttribute('data-logado') === 'true';
@@ -152,11 +152,8 @@
             } else {
                 fetch(botao.getAttribute('data-url'), { method: 'POST' })
                 .then(() => {
-                    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-                    document.getElementById('toastMensagem').innerText = "✨ Filme adicionado aos favoritos!";
-                    document.getElementById('liveToast').className = "toast align-items-center text-white bg-success border-0";
-                    toast.show();
-                    botao.setAttribute('data-favorito', 'true');
+                    // Recarrega a página para atualizar o contador
+                    location.reload(); 
                 });
             }
         }
