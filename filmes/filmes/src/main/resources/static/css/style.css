@@ -86,3 +86,9 @@ body {
     border-radius: 8px;
     padding: 6px 12px;
 }
+
+/* Reforço para os inputs no arquivo CSS */
+.form-control:focus, .form-select:focus {
+    border-color: var(--laranja-alfa) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 133, 27, 0.25) !important;
+}
