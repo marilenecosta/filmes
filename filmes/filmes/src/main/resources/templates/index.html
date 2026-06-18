@@ -36,7 +36,12 @@
                 <span class="fw-bold text-light" th:if="${session.usuarioLogado}">Olá, <span th:text="${session.usuarioLogado.nome}">Usuário</span>!</span>
                 <div class="d-flex gap-2">
                     <a th:href="@{/}" class="btn btn-outline-light btn-sm">Voltar ao Menu</a>
-                    <a th:if="${session.usuarioLogado}" href="/favoritos" class="btn btn-warning btn-sm position-relative">⭐ Favoritos <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" th:text="${totalFavoritos != null ? totalFavoritos : 0}">0</span></a>
+                    <a th:if="${session.usuarioLogado}" href="/favoritos" class="btn btn-warning btn-sm position-relative">⭐ Favoritos 
+                        <span id="contadorFavoritos"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            th:text="${totalFavoritos != null ? totalFavoritos : 0}">
+                            0
+                        </span>
                     <a th:if="${session.usuarioLogado == null}" href="/login" class="btn btn-outline-light btn-sm">Entrar 🔑</a>
                     <a th:if="${session.usuarioLogado}" th:href="@{/logout}" class="btn btn-danger btn-sm">Sair 🚪</a>
                 </div>
@@ -164,9 +169,11 @@
 
                     botao.setAttribute('data-favorito', 'true');
 
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 800);
+                        const contador = document.getElementById('contadorFavoritos');
+
+                        if (contador) {
+                            contador.innerText = parseInt(contador.innerText) + 1;
+                        }
                 });
             }
         }
