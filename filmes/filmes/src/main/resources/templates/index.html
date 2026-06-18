@@ -66,14 +66,6 @@
                         <div class="col-md-2"><label class="form-label fw-bold">Ano</label><input type="text" name="ano" class="form-control" th:value="${filme != null ? (filme['ano'] != null ? filme['ano'] : filme.ano) : ''}" required></div>
                         <div class="col-md-3"><label class="form-label fw-bold">Diretor</label><input type="text" name="diretor" class="form-control" th:value="${filme != null ? (filme['diretor'] != null ? filme['diretor'] : filme.diretor) : ''}" required></div>
                         <div class="col-md-3"><label class="form-label fw-bold">Gênero</label><select name="generoId" class="form-select" required><option value="">Selecione...</option><option th:each="g : ${generos}" th:value="${g.id}" th:text="${g.nome}" th:selected="${filme != null and (#strings.toString(filme['genero_id'] != null ? filme['genero_id'] : filme.generoId) == #strings.toString(g.id))}"></option></select></div>
-                        
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">URL da Imagem (Pôster)</label>
-                            <input type="text" name="urlImagem" class="form-control" 
-                                   th:value="${filme != null ? (filme['url_imagem'] != null ? filme['url_imagem'] : (filme.urlImagem != null ? filme.urlImagem : '')) : ''}" 
-                                   placeholder="https://exemplo.com/poster.jpg">
-                        </div>
-
                         <div class="col-12 text-end"><button type="submit" class="btn btn-principal px-5"><span th:if="${filme == null}">SALVAR FILME</span><span th:if="${filme != null}">ATUALIZAR FILME</span></button></div>
                     </form>
                     <div class="mt-3 text-end"><a th:href="@{/gerenciar}" class="text-muted small" style="text-decoration: none;">✖ Cancelar / Voltar</a></div>
@@ -114,16 +106,7 @@
                 <div class="col" th:each="f : ${filmes}">
                     <div class="card">
                         <div class="card-body text-center p-3">
-                            <div class="mb-2">
-                                <img th:if="${f['url_imagem'] != null and f['url_imagem'] != ''}" 
-                                     th:src="${f['url_imagem']}" 
-                                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;" alt="Capa">
-                                <div th:if="${f['url_imagem'] == null or f['url_imagem'] == ''}" 
-                                     style="width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; background: #eee; border-radius: 8px;">
-                                     <span style="font-size: 3rem;">🎬</span>
-                                </div>
-                            </div>
-
+                            <div class="mb-2 text-secondary" style="font-size: 1.5rem;">🎬</div>
                             <h6 class="card-title fw-bold mb-1" th:text="${f['titulo'] != null ? f['titulo'] : f.titulo}">Título</h6>
                             <p class="card-text text-muted small mb-2"><span th:text="${f['ano'] != null ? f['ano'] : f.ano}">Ano</span> • <span th:text="${f['diretor'] != null ? f['diretor'] : f.diretor}">Diretor</span></p>
                             <span class="badge bg-light text-primary border" style="font-size: 0.7rem;" th:text="${f['genero_nome'] != null ? f['genero_nome'] : (f['nome'] != null ? f['nome'] : f.nomeGenero)}">Gênero</span>

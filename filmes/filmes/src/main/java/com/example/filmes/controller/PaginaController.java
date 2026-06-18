@@ -39,6 +39,9 @@ public class PaginaController {
         if (!model.containsAttribute("filme")) {
             model.addAttribute("filme", null); 
         }
+        
+        // O Spring MVC injeta automaticamente o 'mensagem' (via FlashAttribute) 
+        // enviado pelo LoginController ou outros métodos neste model.
         return "index";
     }
 
@@ -48,14 +51,13 @@ public class PaginaController {
                          @RequestParam(required = false) Integer ano,
                          @RequestParam(required = false) String diretor,
                          @RequestParam Integer generoId,
-                         @RequestParam(required = false) String urlImagem,
                          RedirectAttributes redirectAttributes) {
         
         try {
             if (id == null) {
-                filmeService.salvarFilme(titulo, ano, diretor, generoId, urlImagem);
+                filmeService.salvarFilme(titulo, ano, diretor, generoId);
             } else {
-                filmeService.atualizarFilme(id, titulo, ano, diretor, generoId, urlImagem);
+                filmeService.atualizarFilme(id, titulo, ano, diretor, generoId);
             }
             redirectAttributes.addFlashAttribute("sucesso", "Operação realizada com sucesso!");
             return "redirect:/gerenciar";
@@ -81,10 +83,9 @@ public class PaginaController {
                             @RequestParam(required = false) Integer ano,
                             @RequestParam(required = false) String diretor,
                             @RequestParam Integer generoId,
-                            @RequestParam(required = false) String urlImagem,
                             RedirectAttributes redirectAttributes) {
         try {
-            filmeService.atualizarFilme(id, titulo, ano, diretor, generoId, urlImagem);
+            filmeService.atualizarFilme(id, titulo, ano, diretor, generoId);
             redirectAttributes.addFlashAttribute("sucesso", "Filme atualizado com sucesso!");
             return "redirect:/gerenciar";
         } catch (IllegalArgumentException e) {
@@ -127,10 +128,10 @@ public class PaginaController {
         try {
             generoService.excluir(id); 
             return "redirect:/generos?excluido";
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {            
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {           
             ra.addFlashAttribute("erro", "Não é possível excluir: gênero em uso.");
             return "redirect:/generos";
-        } catch (Exception e) {            
+        } catch (Exception e) {           
             return "redirect:/generos?erro=inesperado";
         }
     }

@@ -8,8 +8,7 @@ public class Filme {
     private Integer ano;
     private String diretor;
     private Integer generoId;
-    private String nomeGenero;
-    private String urlImagem; // Novo campo
+    private String nomeGenero; 
 
     // Getters e Setters
     public UUID getId() { return id; }
@@ -24,8 +23,4 @@ public class Filme {
     public void setGeneroId(Integer generoId) { this.generoId = generoId; }
     public String getNomeGenero() { return nomeGenero; }
     public void setNomeGenero(String nomeGenero) { this.nomeGenero = nomeGenero; }
-    
-    // Novos métodos para URL da Imagem
-    public String getUrlImagem() { return urlImagem; }
-    public void setUrlImagem(String urlImagem) { this.urlImagem = urlImagem; }
 }
