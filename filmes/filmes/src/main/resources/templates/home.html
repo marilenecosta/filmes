@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>CineFlow | Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { 
-            --azul-escuro: #001f3f; 
-            --laranja: #ff851b; 
-            --cinza-fundo: #f4f7f6; 
+        :root {
+            --azul-escuro: #001f3f;
+            --laranja: #ff851b;
+            --cinza-fundo: #f4f7f6;
         }
 
-        body { 
-            background-color: var(--cinza-fundo); 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
+        body {
+            background-color: var(--cinza-fundo);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
         }
 
-        .header-sistema { 
-            background-color: var(--azul-escuro); 
-            color: white; 
-            padding: 30px 0; 
-            text-align: center; 
+        .header-sistema {
+            background-color: var(--azul-escuro);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
             border-bottom: 6px solid var(--laranja);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .header-sistema h1 { font-weight: 800; letter-spacing: 2px; margin: 0; font-size: 2.5rem; }
-        .header-sistema p { color: var(--laranja); font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+        .header-sistema h1 {
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .header-sistema p {
+            color: var(--laranja);
+            font-weight: bold;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
 
         .main-content {
             flex: 1;
@@ -38,7 +50,7 @@
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 25px; 
+            gap: 25px;
             padding: 40px 20px;
         }
 
@@ -50,7 +62,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             text-decoration: none;
             transition: 0.3s;
             background-color: var(--laranja);
@@ -61,12 +73,21 @@
 
         .card-home:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
             color: white;
         }
 
-        .card-icon { font-size: 55px; margin-bottom: 10px; }
-        .card-text { font-weight: bold; text-transform: uppercase; font-size: 1rem; letter-spacing: 0.5px; }
+        .card-icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
 
         .footer-sistema {
             background-color: var(--azul-escuro);
@@ -84,6 +105,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="header-sistema">
@@ -107,7 +129,8 @@
             <div class="card-text">Listar Catálogo</div>
         </a>
 
-        <a th:href="@{/generos}" class="card-home" style="background-color: var(--azul-escuro); border: 2px solid var(--laranja);">
+        <a th:href="@{/generos}" class="card-home"
+            style="background-color: var(--azul-escuro); border: 2px solid var(--laranja);">
             <div class="card-icon">📋</div>
             <div class="card-text">Gêneros</div>
         </a>
@@ -121,4 +144,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

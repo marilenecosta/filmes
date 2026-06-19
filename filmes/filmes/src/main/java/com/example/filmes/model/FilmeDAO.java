@@ -17,19 +17,18 @@ public class FilmeDAO {
     // LISTAR TODOS OS FILMES (Corrigido com ordenação)
     public List<Map<String, Object>> listar() {
         String sql = "SELECT f.*, g.nome AS genero_nome FROM filme f " +
-                     "LEFT JOIN genero g ON f.genero_id = g.id " +
-                     "ORDER BY f.titulo ASC"; // <-- Adicionado aqui
+                "LEFT JOIN genero g ON f.genero_id = g.id " +
+                "ORDER BY f.titulo ASC";
         return jdbc.queryForList(sql);
     }
 
     // PESQUISAR FILMES POR TÍTULO (Corrigido com ordenação)
     public List<Map<String, Object>> pesquisarPorTitulo(String titulo) {
-        String sql =
-            "SELECT f.*, g.nome AS genero_nome " +
-            "FROM filme f " +
-            "LEFT JOIN genero g ON f.genero_id = g.id " +
-            "WHERE UPPER(f.titulo) LIKE UPPER(?) " +
-            "ORDER BY f.titulo ASC"; // <-- Adicionado aqui
+        String sql = "SELECT f.*, g.nome AS genero_nome " +
+                "FROM filme f " +
+                "LEFT JOIN genero g ON f.genero_id = g.id " +
+                "WHERE UPPER(f.titulo) LIKE UPPER(?) " +
+                "ORDER BY f.titulo ASC";
 
         return jdbc.queryForList(sql, "%" + titulo + "%");
     }
@@ -61,11 +60,11 @@ public class FilmeDAO {
     // PESQUISAR FILMES POR GÊNERO (Corrigido com ordenação)
     public List<Map<String, Object>> pesquisarPorGenero(Integer generoId) {
         String sql = "SELECT f.*, g.nome AS genero_nome " +
-                     "FROM filme f " +
-                     "LEFT JOIN genero g ON f.genero_id = g.id " +
-                     "WHERE f.genero_id = ? " +
-                     "ORDER BY f.titulo ASC"; // <-- Adicionado aqui
-        
+                "FROM filme f " +
+                "LEFT JOIN genero g ON f.genero_id = g.id " +
+                "WHERE f.genero_id = ? " +
+                "ORDER BY f.titulo ASC";
+
         return jdbc.queryForList(sql, generoId);
     }
 }

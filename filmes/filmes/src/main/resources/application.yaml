@@ -2,8 +2,7 @@ server:
   port: 8080
 
 spring:
-  datasource:
-    # O Render vai substituir estas variáveis pelos valores reais que você colocará no "Environment"
+  datasource:    
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
@@ -18,6 +17,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   sql:
-    init:
-      # Alterado para 'never' para evitar erros de tentativa de criação de tabelas no deploy
+    init:     
       mode: never

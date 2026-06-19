@@ -32,6 +32,5 @@ INSERT INTO usuario (nome, email, password)
 VALUES ('Mari', 'mari@email.com', '123456')
 ON CONFLICT (email) DO NOTHING;
 
--- ADICIONE ESTES ÍNDICES PARA MELHORAR A PERFORMANCE E ORGANIZAÇÃO:
 CREATE INDEX IF NOT EXISTS idx_filme_titulo ON filme(titulo);
 CREATE INDEX IF NOT EXISTS idx_genero_nome ON genero(nome);

@@ -20,7 +20,7 @@ public class Usuario {
         this.password = password;
     }
 
-    // Método conversor idêntico ao que o professor utiliza nas DAOs dele
+    // Método conversor 
     public static Usuario converter(Map<String, Object> registro) {
         Usuario user = new Usuario();
         user.setId(String.valueOf(registro.get("id")));

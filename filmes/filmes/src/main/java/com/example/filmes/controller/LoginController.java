@@ -21,7 +21,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error,
-                        Model model) {
+            Model model) {
         if (error != null) {
             model.addAttribute("errorMsg", "Nome ou senha inválidos.");
         }
@@ -30,25 +30,24 @@ public class LoginController {
 
     @PostMapping("/login")
     public String efetuarLogin(@RequestParam("username") String email,
-                               @RequestParam("password") String senha,
-                               HttpSession session) {
-        
+            @RequestParam("password") String senha,
+            HttpSession session) {
+
         Usuario usuario = usuarioDAO.buscarPorEmail(email);
-        
+
         // Validação: se o usuário existir e a senha bater
         if (usuario != null && usuario.getPassword().equals(senha)) {
             session.setAttribute("usuarioLogado", usuario);
             return "redirect:/gerenciar";
         }
-        
+
         return "redirect:/login?error=true";
     }
 
-    // Corrigido: Agora redireciona para o catálogo ao invés de voltar para a tela de login
     @GetMapping("/logout")
     public String efetuarLogout(HttpSession session, RedirectAttributes attributes) {
         session.invalidate();
         attributes.addFlashAttribute("mensagem", "Você saiu da sua conta.");
-        return "redirect:/gerenciar"; 
+        return "redirect:/gerenciar";
     }
 }

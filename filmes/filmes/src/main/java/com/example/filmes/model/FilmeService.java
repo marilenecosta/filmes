@@ -25,7 +25,7 @@ public class FilmeService {
         if (titulo == null || titulo.trim().length() < 3) {
             throw new IllegalArgumentException("titulo_curto");
         }
-        
+
         // Validação: Ano não pode ser futuro (compara com o ano vigente: 2026)
         int anoAtual = Year.now().getValue();
         if (ano == null || ano > anoAtual) {
@@ -41,13 +41,13 @@ public class FilmeService {
         if (titulo == null || titulo.trim().length() < 3) {
             throw new IllegalArgumentException("titulo_curto");
         }
-        
+
         // Validação de ano
         int anoAtual = Year.now().getValue();
         if (ano == null || ano > anoAtual) {
             throw new IllegalArgumentException("ano_invalido");
         }
-        
+
         filmeDAO.atualizar(id, titulo, ano, diretor, generoId);
     }
 

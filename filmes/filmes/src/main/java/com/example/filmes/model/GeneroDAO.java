@@ -13,12 +13,10 @@ public class GeneroDAO {
 
     public List<Genero> listar() {
         return jdbc.query(
-            "SELECT * FROM genero ORDER BY id",
-            (rs, rowNum) -> new Genero(
-                rs.getInt("id"),
-                rs.getString("nome")
-            )
-        );
+                "SELECT * FROM genero ORDER BY id",
+                (rs, rowNum) -> new Genero(
+                        rs.getInt("id"),
+                        rs.getString("nome")));
     }
 
     public void salvar(Integer id, String nome) {
@@ -31,13 +29,11 @@ public class GeneroDAO {
 
     public Genero buscarPorId(Integer id) {
         return jdbc.queryForObject(
-            "SELECT * FROM genero WHERE id = ?",
-            (rs, rowNum) -> new Genero(
-                rs.getInt("id"),
-                rs.getString("nome")
-            ),
-            id
-        );
+                "SELECT * FROM genero WHERE id = ?",
+                (rs, rowNum) -> new Genero(
+                        rs.getInt("id"),
+                        rs.getString("nome")),
+                id);
     }
 
     public void excluir(Integer id) {
